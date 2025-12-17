@@ -114,6 +114,5 @@ jobs:
                 --set replicaCount=3  
 
        
-        - name: Monitor canary
-          run: kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout status deployment/bitcoin-app
+     
             
