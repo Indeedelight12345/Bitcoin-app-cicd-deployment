@@ -115,6 +115,5 @@ jobs:
 
        
         - name: Monitor canary
-          run: |
-            kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout status deployment/bitcoin-app
-            kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout history deployment/bitcoin-app
+          run: kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout status deployment/bitcoin-app
+            
