@@ -115,6 +115,7 @@ jobs:
 
         - name: Deploy new version to cluster2 (Blue-Green)
           run: |
+            cd $GITHUB_WORKSPACE
             export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig2
             helm upgrade --install bitcoin-app ./helm/bitcoin-app \
               --set image.tag=latest
