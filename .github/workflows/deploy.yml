@@ -44,6 +44,11 @@ jobs:
           echo "${{ secrets.KUBECONFIG1 }}" | base64 -d > kubeconfig1
           export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig1
 
+      - name: list the file directory 
+        run: |
+          pwd 
+           ls -la 
+
       - name: Deploy to Kind Cluster 1 using Helm
         working-directory: ./helm
         run: |
