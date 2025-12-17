@@ -72,3 +72,43 @@ jobs:
           helm upgrade --install bitcoin-app ./helm/bitcoin-app \
             --set image.repository=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }} \
             --set image.tag=${{ github.sha }}
+
+deploy-canary:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy canary to cluster1
+        run: |
+          cd $GITHUB_WORKSPACE
+          export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig1
+          helm upgrade --install bitcoin-app ./helm/bitcoin-app \
+            --set image.tag=latest \
+            --set replicaCount=1   # deploy only 1 pod for canary
+
+      - name: Monitor canary
+        run: kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig1 rollout status deployment/bitcoin-app
+
+deploy-full:
+    runs-on: self-hosted
+    needs: deploy-canary
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy full version to cluster1
+        run: |
+         cd $GITHUB_WORKSPACE
+          export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig1
+          helm upgrade --install bitcoin-app ./helm/bitcoin-app \
+            --set image.tag=latest \
+            --set replicaCount=3  
+
+      - name: Deploy new version to cluster2 (Blue-Green)
+        run: |
+          export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig2
+          helm upgrade --install bitcoin-app ./helm/bitcoin-app \
+            --set image.tag=latest
+
+      - name: Monitor canary
+        run: |
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout status deployment/bitcoin-app
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout history deployment/bitcoin-app

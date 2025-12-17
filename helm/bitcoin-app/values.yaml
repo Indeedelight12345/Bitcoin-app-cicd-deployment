@@ -1,5 +1,5 @@
-replicaCount: 4
 
+replicaCount: 3
 image:
   repository: rukevweubio/bitcoin-app
   tag: latest
@@ -31,4 +31,12 @@ autoscaling:
 
 httpRoute:
   enabled: false
+
+
+
+# Canary control
+canary:
+  enabled: false
+  replicaCount: 1
+
 
