@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Cryptocurrency Tracker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-coins"></i> Multi-Cryptocurrency Tracker</h1>
+            <p>Real-time prices for top cryptocurrencies</p>
+        </header>
+
+        <main>
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search cryptocurrencies...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="refresh-btn">
+                    <button id="refresh-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+            </div>
+
+            <div class="crypto-list" id="crypto-list">
+                <!-- Cryptocurrency cards will be dynamically inserted here -->
+            </div>
+
+            <div class="pagination" id="pagination">
+                <!-- Pagination controls will be inserted here -->
+            </div>
+        </main>
+
+        <footer>
+            <p>Data provided by CoinGecko API | Updates every 60 seconds</p>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
