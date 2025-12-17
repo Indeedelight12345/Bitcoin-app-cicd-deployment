@@ -52,6 +52,7 @@ jobs:
       - name: Deploy to Kind Cluster 1 using Helm
         working-directory: ./helm
         run: |
+          cd $GITHUB_WORKSPACE
           export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig1
           helm upgrade --install bitcoin-app ./helm/bitcoin-app \
             --set image.repository=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }} \
@@ -66,6 +67,7 @@ jobs:
       - name: Deploy to Kind Cluster 2 using Helm
         working-directory: ./helm
         run: |
+          cd $GITHUB_WORKSPACE
           export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig2
           helm upgrade --install bitcoin-app ./helm/bitcoin-app \
             --set image.repository=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }} \
