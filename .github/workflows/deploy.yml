@@ -78,22 +78,33 @@ jobs:
       needs: build-and-deploy
       steps:
         - uses: actions/checkout@v4
+
+        - name: Configure kubeconfig (Cluster 2)
+          run: |
+            echo "${{ secrets.KUBECONFIG2 }}" | base64 -d > kubeconfig2
+            export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig2
+
         - name: Deploy canary to cluster1
+          working-directory: ./helm
           run: |
             cd $GITHUB_WORKSPACE
-            export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig1
+            export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig2
             helm upgrade --install bitcoin-app ./helm/bitcoin-app \
               --set image.tag=latest \
-              --set replicaCount=1   # deploy only 1 pod for canary
+              --set replicaCount=1   
 
         - name: Monitor canary
-          run: kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig1 rollout status deployment/bitcoin-app
+          run: kubectl --kubeconfig=$GITHUB_WORKSPACE/kubeconfig2 rollout status deployment/bitcoin-app
 
   deploy-full:
       runs-on: self-hosted
       needs: [build-and-deploy, deploy-canary]
       steps:
         - uses: actions/checkout@v4
+        - name: Configure kubeconfig (Cluster 1)
+          run: |
+            echo "${{ secrets.KUBECONFIG1 }}" | base64 -d > kubeconfig1
+            export KUBECONFIG=$GITHUB_WORKSPACE/kubeconfig1
         - name: Deploy full version to cluster1
           run: |
             cd $GITHUB_WORKSPACE
